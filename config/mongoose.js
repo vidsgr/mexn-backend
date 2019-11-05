@@ -6,7 +6,13 @@ const config = require('./config');
 
 // connect to mongo db
 const mongoUri = config.mongo.host;
-mongoose.connect(mongoUri, { keepAlive: 1 });
+mongoose.connect(mongoUri, 
+  { keepAlive: 1, 
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  }
+);
 mongoose.connection.on('error', () => {
   throw new Error(`unable to connect to database: ${mongoUri}`);
 });

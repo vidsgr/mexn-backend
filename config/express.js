@@ -12,9 +12,16 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const routes = require('../routes/index.route');
 const config = require('./config');
-const passport = require('./passport')
-
+const passport = require('./passport');
+const SockServer = require('./socketio');
 const app = express();
+
+//app.server = http.createServer(app);
+
+//let socketio = require('socket.io')(app.server, {
+//  serveClient: true
+//});
+//require('./socketio').SockServer(socketio)
 
 if (config.env === 'development') {
   app.use(logger('dev'));
@@ -41,6 +48,10 @@ app.use(/^((?!(api)).)*/, (req, res) => {
 res.sendFile(path.join(__dirname, '../../dist/index.html'));
 }); 
 
+//server = app.listen(port);
+
+const io = require('socket.io')(app.server);
+SockServer(io)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -82,5 +93,10 @@ app.use((err, req, res, next) => {
   });
   next(err);
 });
-
+/*
+let socketio = require('socket.io')(app.server, {
+  serveClient: false 
+});
+require('./socketio').SockServer(socketio)
+*/
 module.exports = app;
